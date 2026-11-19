@@ -1,0 +1,2 @@
+ROLLBACK;
+SELECT * FROM venda WHERE idVenda = 2;

@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f7f5">
+  <meta name="description" content="Histórico de vendas do farmacêutico na farma+.">
+  <title>Histórico de vendas | farma+</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="utilizadores.css">
+  <link rel="stylesheet" href="historico.css">
+  <script src="config.js" defer></script>
+  <script src="api.js" defer></script>
+  <script src="historico.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Menu principal">
+      <a class="brand" href="dasboard.html" aria-label="farma+, painel de controlo">
+        <span class="brand-mark" aria-hidden="true">+</span>
+        <span class="brand-name">farma<span>+</span><small>gestão inteligente</small></span>
+      </a>
+
+      <p class="nav-caption">ESPAÇO DE TRABALHO</p>
+      <nav class="navigation" aria-label="Navegação principal">
+        <a class="nav-link" href="#"><span aria-hidden="true">▦</span>Dashboard</a>
+        <a class="nav-link" href="venda.html"><span aria-hidden="true">＋</span>Nova venda</a>
+        <a class="nav-link active" href="historico.html" aria-current="page"><span aria-hidden="true">↻</span>Histórico de vendas</a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="help-card">
+          <span class="help-mark" aria-hidden="true">?</span>
+          <span><strong>Precisa de ajuda?</strong><small>Consulte a equipa de suporte</small></span>
+        </div>
+        <a class="logout-link" href="login.html"><span aria-hidden="true">↪</span>Terminar sessão</a>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">FARMÁCIA CENTRAL</p>
+          <h1>Histórico de vendas</h1>
+        </div>
+        <div class="admin-profile">
+          <span class="avatar" id="pharmacistAvatar" aria-hidden="true">FA</span>
+          <span><strong id="pharmacistName">Farmacêutico</strong><small>As minhas vendas</small></span>
+        </div>
+      </header>
+
+      <div class="page-content history-content">
+        <section class="welcome-row" aria-labelledby="page-title">
+          <div>
+            <p class="eyebrow">ATIVIDADE</p>
+            <h2 id="page-title">As minhas vendas</h2>
+            <p class="intro">Consulte cada venda registada e reveja os produtos, quantidades e pagamentos.</p>
+          </div>
+          <div class="history-heading-actions">
+            <button class="secondary-button" id="exportButton" type="button"><span aria-hidden="true">⇩</span> Exportar CSV</button>
+            <a class="primary-button" href="venda.html"><span aria-hidden="true">＋</span> Nova venda</a>
+          </div>
+        </section>
+
+        <p class="demo-notice"><span aria-hidden="true">i</span> O histórico é carregado da base de dados e apresenta as suas vendas.</p>
+
+        <section class="history-metrics" aria-label="Resumo das vendas filtradas">
+          <article class="history-metric">
+            <span class="history-metric-icon green" aria-hidden="true">↗</span>
+            <div><small>Vendas no período</small><strong id="metricSales">0</strong></div>
+          </article>
+          <article class="history-metric">
+            <span class="history-metric-icon blue" aria-hidden="true">▤</span>
+            <div><small>Unidades vendidas</small><strong id="metricUnits">0</strong></div>
+          </article>
+          <article class="history-metric">
+            <span class="history-metric-icon violet" aria-hidden="true">€</span>
+            <div><small>Total recebido</small><strong id="metricTotal">0 AOA</strong></div>
+          </article>
+        </section>
+
+        <section class="user-panel history-panel" aria-label="Lista do histórico de vendas">
+          <div class="table-toolbar history-toolbar">
+            <div>
+              <h3>Registos de venda</h3>
+              <p id="salesCount" aria-live="polite"></p>
+            </div>
+            <div class="history-filters">
+              <label class="search-field">
+                <span aria-hidden="true">⌕</span>
+                <input id="salesSearch" type="search" placeholder="Pesquisar venda ou produto" aria-label="Pesquisar no histórico">
+              </label>
+              <label class="sr-only" for="periodFilter">Filtrar por período</label>
+              <select id="periodFilter" class="history-select">
+                <option value="all">Todo o período</option>
+                <option value="today">Hoje</option>
+                <option value="week">Últimos 7 dias</option>
+                <option value="month">Este mês</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-scroll history-table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Referência</th>
+                  <th scope="col">Data e hora</th>
+                  <th scope="col">Produtos</th>
+                  <th scope="col">Pagamento</th>
+                  <th scope="col">Total</th>
+                  <th scope="col"><span class="sr-only">Detalhes</span></th>
+                </tr>
+              </thead>
+              <tbody id="salesTableBody"></tbody>
+            </table>
+            <div class="empty-state" id="emptyState" hidden>
+              <span class="empty-icon" aria-hidden="true">↻</span>
+              <h3 id="emptyTitle">Ainda não existem vendas</h3>
+              <p id="emptyMessage">As vendas que concluir aparecerão aqui.</p>
+              <a class="primary-button empty-action" href="venda.html"><span aria-hidden="true">＋</span> Registar venda</a>
+            </div>
+          </div>
+          <div class="table-footer"><span>Histórico pessoal do farmacêutico</span><span id="visibleCount"></span></div>
+        </section>
+
+        <footer class="page-footer">farma+ <span aria-hidden="true">·</span> Histórico de vendas</footer>
+      </div>
+    </main>
+  </div>
+
+  <dialog class="user-dialog sale-dialog" id="saleDialog" aria-labelledby="saleDialogTitle">
+    <div class="dialog-heading">
+      <div>
+        <p class="eyebrow">DETALHES DA VENDA</p>
+        <h2 id="saleDialogTitle">Venda</h2>
+        <p id="saleDialogMeta"></p>
+      </div>
+      <button class="close-button" id="closeDialogButton" type="button" aria-label="Fechar">×</button>
+    </div>
+    <div class="sale-detail-content" id="saleDetailContent"></div>
+    <div class="sale-detail-footer">
+      <span>Total da venda</span>
+      <strong id="saleDialogTotal"></strong>
+    </div>
+    <div class="dialog-actions">
+      <button class="secondary-button" id="closeDetailButton" type="button">Fechar</button>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

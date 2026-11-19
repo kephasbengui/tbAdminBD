@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f7f5">
+  <meta name="description" content="Gestão dos fornecedores da farma+.">
+  <title>Fornecedores | farma+</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="utilizadores.css">
+  <link rel="stylesheet" href="fornecedores.css">
+  <script src="config.js" defer></script>
+  <script src="api.js" defer></script>
+  <script src="fornecedores.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Menu principal">
+      <a class="brand" href="dasboard.html" aria-label="farma+, painel de controlo">
+        <span class="brand-mark" aria-hidden="true">+</span>
+        <span class="brand-name">farma<span>+</span><small>gestão inteligente</small></span>
+      </a>
+
+      <p class="nav-caption">ESPAÇO DE TRABALHO</p>
+      <nav class="navigation" aria-label="Navegação principal">
+        <a class="nav-link" href="dasboard.html"><span aria-hidden="true">▦</span>Visão geral</a>
+        <a class="nav-link" href="stock_lotes.html"><span aria-hidden="true">▤</span>Stock e lotes</a>
+        <a class="nav-link active" href="fornecedores.html" aria-current="page"><span aria-hidden="true">♧</span>Fornecedores</a>
+        <a class="nav-link" href="utilizadores.html"><span aria-hidden="true">♙</span>Utilizadores</a>
+        <a class="nav-link" href="venda.html"><span aria-hidden="true">＋</span>Nova venda</a>
+        <a class="nav-link" href="historico.html"><span aria-hidden="true">↻</span>Histórico de vendas</a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="help-card">
+          <span class="help-mark" aria-hidden="true">?</span>
+          <span><strong>Precisa de ajuda?</strong><small>Consulte a equipa de suporte</small></span>
+        </div>
+        <a class="logout-link" href="login.html"><span aria-hidden="true">↪</span>Terminar sessão</a>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">FARMÁCIA CENTRAL</p>
+          <h1>Gestão de fornecedores</h1>
+        </div>
+        <div class="admin-profile">
+          <span class="avatar" aria-hidden="true">AD</span>
+          <span><strong>Administrador</strong><small>Gestão da farmácia</small></span>
+        </div>
+      </header>
+
+      <div class="page-content">
+        <section class="welcome-row" aria-labelledby="page-title">
+          <div>
+            <p class="eyebrow">PARCEIROS</p>
+            <h2 id="page-title">Fornecedores</h2>
+            <p class="intro">Consulte e mantenha atualizados os dados dos parceiros da farmácia.</p>
+          </div>
+          <button class="primary-button" id="addSupplierButton" type="button"><span aria-hidden="true">＋</span> Novo fornecedor</button>
+        </section>
+
+        <p class="demo-notice"><span aria-hidden="true">i</span> Os fornecedores são geridos na base de dados.</p>
+
+        <section class="user-panel" aria-label="Lista de fornecedores">
+          <div class="table-toolbar">
+            <div>
+              <h3>Todos os fornecedores</h3>
+              <p id="supplierCount" aria-live="polite"></p>
+            </div>
+            <label class="search-field">
+              <span aria-hidden="true">⌕</span>
+              <input id="supplierSearch" type="search" placeholder="Pesquisar por empresa, NIF ou email" aria-label="Pesquisar fornecedores">
+            </label>
+          </div>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Empresa</th>
+                  <th scope="col">NIF</th>
+                  <th scope="col">Telefone</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Estado</th>
+                  <th scope="col"><span class="sr-only">Ações</span></th>
+                </tr>
+              </thead>
+              <tbody id="suppliersTableBody"></tbody>
+            </table>
+            <div class="empty-state" id="emptyState" hidden>
+              <span class="empty-icon" aria-hidden="true">♧</span>
+              <h3 id="emptyTitle">Ainda não existem fornecedores</h3>
+              <p id="emptyMessage">Adicione um fornecedor para gerir os parceiros da farmácia.</p>
+            </div>
+          </div>
+          <div class="table-footer"><span>Gestão de parceiros</span><span id="visibleCount"></span></div>
+        </section>
+
+        <footer class="page-footer">farma+ <span aria-hidden="true">·</span> Painel administrativo</footer>
+      </div>
+    </main>
+  </div>
+
+  <dialog class="user-dialog" id="supplierDialog" aria-labelledby="dialogTitle">
+    <form id="supplierForm">
+      <div class="dialog-heading">
+        <div>
+          <p class="eyebrow">PARCEIROS</p>
+          <h2 id="dialogTitle">Novo fornecedor</h2>
+          <p>Preencha os dados do fornecedor.</p>
+        </div>
+        <button class="close-button" id="closeDialogButton" type="button" aria-label="Fechar">×</button>
+      </div>
+
+      <label class="form-field" for="supplierName">Nome da empresa
+        <input id="supplierName" name="nomeDaEmpresa" type="text" maxlength="150" autocomplete="organization" required>
+      </label>
+      <div class="form-row">
+        <label class="form-field" for="supplierNif">NIF
+          <input id="supplierNif" name="nif" type="text" maxlength="20" required>
+        </label>
+        <label class="form-field" for="supplierStatus">Estado
+          <select id="supplierStatus" name="status" required>
+            <option value="ATIVO">Ativo</option>
+            <option value="INATIVO">Inativo</option>
+          </select>
+        </label>
+      </div>
+      <div class="form-row">
+        <label class="form-field" for="supplierPhone">Telefone
+          <input id="supplierPhone" name="telefone" type="tel" maxlength="20" autocomplete="tel">
+        </label>
+        <label class="form-field" for="supplierEmail">Email
+          <input id="supplierEmail" name="email" type="email" maxlength="100" autocomplete="email">
+        </label>
+      </div>
+      <p class="form-error" id="formError" role="alert" hidden></p>
+      <div class="dialog-actions">
+        <button class="secondary-button" id="cancelDialogButton" type="button">Cancelar</button>
+        <button class="primary-button" id="saveSupplierButton" type="submit">Guardar fornecedor</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

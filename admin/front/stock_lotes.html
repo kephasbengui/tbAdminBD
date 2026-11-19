@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f7f5">
+  <meta name="description" content="Gestão de medicamentos, stock e lotes da farma+.">
+  <title>Stock e lotes | farma+</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="utilizadores.css">
+  <link rel="stylesheet" href="stock_lotes.css">
+  <script src="config.js" defer></script>
+  <script src="api.js" defer></script>
+  <script src="stock_lotes.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Menu principal">
+      <a class="brand" href="dasboard.html" aria-label="farma+, painel de controlo">
+        <span class="brand-mark" aria-hidden="true">+</span>
+        <span class="brand-name">farma<span>+</span><small>gestão inteligente</small></span>
+      </a>
+
+      <p class="nav-caption">ESPAÇO DE TRABALHO</p>
+      <nav class="navigation" aria-label="Navegação principal">
+        <a class="nav-link" href="dasboard.html"><span aria-hidden="true">▦</span>Visão geral</a>
+        <a class="nav-link active" href="stock_lotes.html" aria-current="page"><span aria-hidden="true">▤</span>Stock e lotes</a>
+        <a class="nav-link" href="fornecedores.html"><span aria-hidden="true">♧</span>Fornecedores</a>
+        <a class="nav-link" href="utilizadores.html"><span aria-hidden="true">♙</span>Utilizadores</a>
+        <a class="nav-link" href="venda.html"><span aria-hidden="true">＋</span>Nova venda</a>
+        <a class="nav-link" href="historico.html"><span aria-hidden="true">↻</span>Histórico de vendas</a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="help-card">
+          <span class="help-mark" aria-hidden="true">?</span>
+          <span><strong>Precisa de ajuda?</strong><small>Consulte a equipa de suporte</small></span>
+        </div>
+        <a class="logout-link" href="login.html"><span aria-hidden="true">↪</span>Terminar sessão</a>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">FARMÁCIA CENTRAL</p>
+          <h1>Gestão de stock</h1>
+        </div>
+        <div class="admin-profile">
+          <span class="avatar" aria-hidden="true">AD</span>
+          <span><strong>Administrador</strong><small>Gestão da farmácia</small></span>
+        </div>
+      </header>
+
+      <div class="page-content inventory-content">
+        <section class="welcome-row inventory-heading" aria-labelledby="page-title">
+          <div>
+            <p class="eyebrow">INVENTÁRIO</p>
+            <h2 id="page-title">Stock e lotes</h2>
+            <p class="intro">Acompanhe medicamentos, quantidades, fornecedores e validades num só lugar.</p>
+          </div>
+          <div class="inventory-actions">
+            <button class="secondary-button" id="manageCategoriesButton" type="button">Categorias</button>
+            <button class="secondary-button" id="addMedicineButton" type="button"><span aria-hidden="true">＋</span> Medicamento</button>
+            <button class="primary-button" id="addLotButton" type="button"><span aria-hidden="true">＋</span> Registar lote</button>
+          </div>
+        </section>
+
+        <p class="demo-notice"><span aria-hidden="true">i</span> Os dados de stock são carregados e guardados na base de dados.</p>
+
+        <section class="inventory-metrics" aria-label="Resumo do inventário">
+          <article class="inventory-metric">
+            <div class="inventory-metric-label"><span>Medicamentos</span><span class="metric-icon green" aria-hidden="true">◈</span></div>
+            <strong id="metricProducts">0</strong>
+            <small>Referências no catálogo</small>
+          </article>
+          <article class="inventory-metric">
+            <div class="inventory-metric-label"><span>Unidades disponíveis</span><span class="metric-icon blue" aria-hidden="true">▤</span></div>
+            <strong id="metricUnits">0</strong>
+            <small>Exclui lotes vencidos</small>
+          </article>
+          <article class="inventory-metric">
+            <div class="inventory-metric-label"><span>Stock baixo</span><span class="metric-icon amber" aria-hidden="true">!</span></div>
+            <strong id="metricLowStock">0</strong>
+            <small>Medicamentos com até 30 unidades</small>
+          </article>
+          <article class="inventory-metric">
+            <div class="inventory-metric-label"><span>Lotes a verificar</span><span class="metric-icon violet" aria-hidden="true">◷</span></div>
+            <strong id="metricExpiring">0</strong>
+            <small>Vencidos ou a vencer em 90 dias</small>
+          </article>
+        </section>
+
+        <section class="inventory-panel" aria-label="Catálogo e posição de stock">
+          <div class="inventory-toolbar">
+            <div>
+              <h3>Stock por medicamento</h3>
+              <p id="productCount" aria-live="polite"></p>
+            </div>
+            <div class="inventory-filters">
+              <label class="search-field">
+                <span aria-hidden="true">⌕</span>
+                <input id="inventorySearch" type="search" placeholder="Pesquisar medicamento, lote ou fornecedor" aria-label="Pesquisar inventário">
+              </label>
+              <label class="sr-only" for="categoryFilter">Filtrar por categoria</label>
+              <select id="categoryFilter" class="filter-select" aria-label="Filtrar por categoria"></select>
+              <label class="sr-only" for="stockFilter">Filtrar por estado do stock</label>
+              <select id="stockFilter" class="filter-select">
+                <option value="all">Todos os estados</option>
+                <option value="low">Stock baixo</option>
+                <option value="empty">Sem stock</option>
+                <option value="expiry">Validade a verificar</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-scroll inventory-table-scroll">
+            <table class="inventory-table">
+              <thead>
+                <tr>
+                  <th scope="col">Medicamento</th>
+                  <th scope="col">Categoria</th>
+                  <th scope="col">Preço de venda</th>
+                  <th scope="col">Stock válido</th>
+                  <th scope="col">Lotes</th>
+                  <th scope="col">Próxima validade</th>
+                  <th scope="col"><span class="sr-only">Ações</span></th>
+                </tr>
+              </thead>
+              <tbody id="productsTableBody"></tbody>
+            </table>
+            <div class="empty-state" id="emptyState" hidden>
+              <span class="empty-icon" aria-hidden="true">▤</span>
+              <h3 id="emptyTitle">Ainda não existem medicamentos</h3>
+              <p id="emptyMessage">Adicione um medicamento ao catálogo para começar a controlar o stock.</p>
+            </div>
+          </div>
+          <div class="table-footer"><span>Selecione “Ver lotes” para expandir um medicamento.</span><span id="visibleCount"></span></div>
+        </section>
+
+        <section class="inventory-notes" aria-label="Notas sobre o inventário">
+          <article><span class="note-icon warning" aria-hidden="true">!</span><div><strong>Stock baixo</strong><p>Até 30 unidades válidas disponíveis.</p></div></article>
+          <article><span class="note-icon calendar" aria-hidden="true">◷</span><div><strong>Validade próxima</strong><p>Lotes que vencem nos próximos 90 dias.</p></div></article>
+          <article><span class="note-icon supplier" aria-hidden="true">♧</span><div><strong>Fornecedores</strong><p><a href="fornecedores.html">Gerir os dados dos parceiros →</a></p></div></article>
+        </section>
+
+        <footer class="page-footer">farma+ <span aria-hidden="true">·</span> Painel administrativo</footer>
+      </div>
+    </main>
+  </div>
+
+  <dialog class="user-dialog" id="medicineDialog" aria-labelledby="medicineDialogTitle">
+    <form id="medicineForm">
+      <div class="dialog-heading">
+        <div><p class="eyebrow">CATÁLOGO</p><h2 id="medicineDialogTitle">Novo medicamento</h2><p>Associe o produto a uma categoria.</p></div>
+        <button class="close-button" data-close-dialog="medicineDialog" type="button" aria-label="Fechar">×</button>
+      </div>
+      <label class="form-field" for="medicineName">Nome do medicamento
+        <input id="medicineName" name="nome" type="text" maxlength="150" required>
+      </label>
+      <div class="form-row">
+        <label class="form-field" for="medicineCategory">Categoria
+          <select id="medicineCategory" name="idCategoria" required></select>
+        </label>
+        <label class="form-field" for="medicinePrice">Preço de venda (AOA)
+          <input id="medicinePrice" name="precoDeVenda" type="number" min="0" step="0.01" required>
+        </label>
+      </div>
+      <p class="form-error" id="medicineError" role="alert" hidden></p>
+      <div class="dialog-actions">
+        <button class="secondary-button" data-close-dialog="medicineDialog" type="button">Cancelar</button>
+        <button class="primary-button" type="submit">Guardar medicamento</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="user-dialog" id="lotDialog" aria-labelledby="lotDialogTitle">
+    <form id="lotForm">
+      <div class="dialog-heading">
+        <div><p class="eyebrow">INVENTÁRIO</p><h2 id="lotDialogTitle">Registar lote</h2><p>Registe a quantidade, o fornecedor e as datas do lote.</p></div>
+        <button class="close-button" data-close-dialog="lotDialog" type="button" aria-label="Fechar">×</button>
+      </div>
+      <label class="form-field" for="lotMedicine">Medicamento
+        <select id="lotMedicine" name="idMedicamento" required></select>
+      </label>
+      <div class="form-row">
+        <label class="form-field" for="lotNumber">Número do lote
+          <input id="lotNumber" name="numeroDoLote" type="text" maxlength="50" required>
+        </label>
+        <label class="form-field" for="lotSupplier">Fornecedor
+          <select id="lotSupplier" name="idFornecedor" required></select>
+        </label>
+      </div>
+      <div class="form-row">
+        <label class="form-field" for="lotInitialQuantity">Quantidade inicial
+          <input id="lotInitialQuantity" name="qtdInicial" type="number" min="1" step="1" required>
+        </label>
+        <label class="form-field" for="lotCurrentQuantity">Quantidade atual
+          <input id="lotCurrentQuantity" name="qtdAtual" type="number" min="0" step="1" required>
+        </label>
+      </div>
+      <label class="form-field" for="lotCost">Custo total (AOA)
+        <input id="lotCost" name="custoTotal" type="number" min="0" step="0.01" required>
+      </label>
+      <div class="form-row">
+        <label class="form-field" for="lotDeliveryDate">Data de entrega
+          <input id="lotDeliveryDate" name="dataDeEntrega" type="date" required>
+        </label>
+        <label class="form-field" for="lotExpiryDate">Data de validade
+          <input id="lotExpiryDate" name="dataDeValidade" type="date" required>
+        </label>
+      </div>
+      <p class="form-error" id="lotError" role="alert" hidden></p>
+      <div class="dialog-actions">
+        <button class="secondary-button" data-close-dialog="lotDialog" type="button">Cancelar</button>
+        <button class="primary-button" type="submit">Guardar lote</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="user-dialog category-dialog" id="categoryDialog" aria-labelledby="categoryDialogTitle">
+    <div class="dialog-heading">
+      <div><p class="eyebrow">CATÁLOGO</p><h2 id="categoryDialogTitle">Categorias</h2><p>Adicione categorias ou remova as que não estão em uso.</p></div>
+      <button class="close-button" data-close-dialog="categoryDialog" type="button" aria-label="Fechar">×</button>
+    </div>
+    <form id="categoryForm" class="category-form">
+      <label class="form-field" for="categoryName">Nome da categoria
+        <input id="categoryName" name="nomeDaCategoria" type="text" maxlength="100" required>
+      </label>
+      <label class="form-field" for="categoryDescription">Descrição <span class="optional-label">opcional</span>
+        <input id="categoryDescription" name="descricao" type="text" maxlength="255">
+      </label>
+      <p class="form-error" id="categoryError" role="alert" hidden></p>
+      <button class="primary-button" id="saveCategoryButton" type="submit"><span aria-hidden="true">＋</span> Guardar categoria</button>
+    </form>
+    <div class="category-list" id="categoryList"></div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

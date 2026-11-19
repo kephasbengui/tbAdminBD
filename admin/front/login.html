@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <meta name="theme-color" content="#0c674f">
+     <title>Iniciar sessão | farma+</title>
+     <script src="config.js" defer></script>
+     <script src="api.js" defer></script>
+     <script src="login.js" defer></script>
+     <style>
+          *{
+               margin: 0;
+               padding: 0;
+          }
+          /* .tela{
+               width: 100%;
+               height: 100vh;
+               display: flex;
+               flex-direction: row;
+          } */
+          .esquerda{
+               width: 50%;
+               height: 100vh;
+               background-color:#0c674f;
+               float: left;
+          }
+          .direita{
+               width: 50%;
+               height: 100vh;
+               background-color: #fff;
+               float: right;
+               align-content: center;
+  
+          }   
+          form{
+               display: flex;
+               flex-direction: column;
+               width: 50%;
+               margin: 0 auto;
+          }
+          form label{
+               margin-top: 20px;
+          }
+          form input{
+               margin-top: 10px;
+               padding: 10px;
+               border: 1px solid #ccc;
+               border-radius: 5px;
+          }
+          form button{
+               margin-top: 20px;
+               padding: 10px;
+               background-color: #0c674f;
+               color: #fff;
+               border: none;
+               border-radius: 5px;
+               cursor: pointer;
+          }
+          form button:hover{
+               background-color: #209659;
+          }
+          form button:disabled{
+               cursor: wait;
+               opacity: .7;
+          }
+          .login-message{
+               width: 50%;
+               margin: 14px auto 0;
+               color: #a12828;
+               font-size: 15px;
+               line-height: 1.5;
+          }
+          h1, h2, p{
+               text-align: center;
+          }
+          @media (max-width: 700px){
+               .esquerda{display:none}
+               .direita{width:100%;float:none}
+               form,.login-message{width:min(86%, 420px)}
+          }
+     </style> 
+</head>
+<body>
+     <!-- <div class="tela"> -->
+          <div class="esquerda"></div>
+          <div class="direita">
+               <h2>BEM-VINDO DE VOLTA</h2>
+               <h1>Iniciar sessão</h1>
+               <p>Introduza os seus dados para aceder à plataforma.</p>
+               <form id="loginForm">
+                    <label for="email">Email</label>
+                    <input type="email" name="email" id="email" autocomplete="username" placeholder="nome@farmacia.com" required>
+                    <label for="senha">Palavra-passe</label>
+                    <input type="password" name="senha" id="senha" autocomplete="current-password" placeholder="Sua palavra-passe" required>
+                    <button id="loginButton" type="submit">Entrar na plataforma</button>
+               </form>
+               <p class="login-message" id="loginMessage" role="alert" hidden></p>
+          </div>
+     <!-- </div> -->
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f7f5">
+  <meta name="description" content="Registo de vendas da farma+.">
+  <title>Nova venda | farma+</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="utilizadores.css">
+  <link rel="stylesheet" href="venda.css">
+  <script src="config.js" defer></script>
+  <script src="api.js" defer></script>
+  <script src="venda.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Menu principal">
+      <a class="brand" href="dasboard.html" aria-label="farma+, painel de controlo">
+        <span class="brand-mark" aria-hidden="true">+</span>
+        <span class="brand-name">farma<span>+</span><small>gestão inteligente</small></span>
+      </a>
+
+      <p class="nav-caption">ESPAÇO DE TRABALHO</p>
+      <nav class="navigation" aria-label="Navegação principal">
+        <a class="nav-link" href="#"><span aria-hidden="true">▦</span>Dashboard</a>
+        <a class="nav-link active" href="venda.html" aria-current="page"><span aria-hidden="true">＋</span>Nova venda</a>
+        <a class="nav-link" href="historico.html"><span aria-hidden="true">↻</span>Histórico de vendas</a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="help-card">
+          <span class="help-mark" aria-hidden="true">?</span>
+          <span><strong>Precisa de ajuda?</strong><small>Consulte a equipa de suporte</small></span>
+        </div>
+        <a class="logout-link" href="login.html"><span aria-hidden="true">↪</span>Terminar sessão</a>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">FARMÁCIA CENTRAL</p>
+          <h1>Ponto de venda</h1>
+        </div>
+        <div class="admin-profile">
+          <span class="avatar" aria-hidden="true">FA</span>
+          <span><strong>Farmacêutico</strong><small>Atendimento e vendas</small></span>
+        </div>
+      </header>
+
+      <div class="page-content sale-content">
+        <section class="welcome-row sale-heading" aria-labelledby="page-title">
+          <div>
+            <p class="eyebrow">ATENDIMENTO</p>
+            <h2 id="page-title">Nova venda</h2>
+            <p class="intro">Pesquise os produtos, adicione-os à venda e confirme o pagamento.</p>
+          </div>
+          <div class="sale-date"><span aria-hidden="true">◷</span><span id="currentDate"></span></div>
+        </section>
+
+        <p class="demo-notice"><span aria-hidden="true">i</span> As vendas são registadas na base de dados e o stock é atualizado por lote.</p>
+
+        <section class="sale-layout" aria-label="Registo da venda">
+          <article class="sale-panel products-panel">
+            <div class="panel-top">
+              <div>
+                <h3>Medicamentos disponíveis</h3>
+                <p id="productsCount"></p>
+              </div>
+              <span class="catalog-mark" aria-hidden="true">◈</span>
+            </div>
+
+            <div class="product-search-row">
+              <label class="search-field">
+                <span aria-hidden="true">⌕</span>
+                <input id="productSearch" type="search" placeholder="Pesquisar nome ou categoria" aria-label="Pesquisar medicamentos">
+              </label>
+              <label class="sr-only" for="productCategory">Filtrar por categoria</label>
+              <select style="padding: 5px; border: none;" id="productCategory" class="filter-select">
+                <option 
+                 value="all">Todas as categorias</option>
+              </select>
+            </div>
+
+            <div class="product-list" id="productList" aria-live="polite"></div>
+            <div class="catalog-footer"><span>O stock considera apenas lotes dentro da validade.</span></div>
+          </article>
+
+          <aside class="sale-panel cart-panel" aria-label="Resumo da venda">
+            <div class="panel-top cart-heading">
+              <div>
+                <h3>Venda atual</h3>
+                <p id="cartItemCount">Nenhum produto</p>
+              </div>
+              <button class="clear-cart" id="clearCartButton" type="button" disabled>Limpar</button>
+            </div>
+
+            <div class="cart-items" id="cartItems">
+              <div class="cart-empty">
+                <span class="empty-cart-icon" aria-hidden="true">＋</span>
+                <strong>A venda está vazia</strong>
+                <p>Selecione um medicamento para começar.</p>
+              </div>
+            </div>
+
+            <div class="cart-checkout">
+              <label class="form-field" for="paymentMethod">Forma de pagamento
+                <select id="paymentMethod">
+                  <option value="Dinheiro / Cash">Dinheiro</option>
+                  <option value="Multicaixa">Multicaixa</option>
+                  <option value="Transferência">Transferência</option>
+                  <option value="Outro">Outro</option>
+                </select>
+              </label>
+              <div class="sale-total"><span>Total a pagar</span><strong id="saleTotal">0,00 AOA</strong></div>
+              <button class="primary-button checkout-button" id="checkoutButton" type="button" disabled><span aria-hidden="true">✓</span> Confirmar venda</button>
+              <p class="checkout-note">A venda só é registada após confirmação.</p>
+            </div>
+          </aside>
+        </section>
+
+        <section class="recent-sales-panel">
+          <div class="recent-sales-heading">
+            <div><h3>Vendas recentes</h3><p>Últimas vendas registadas nesta sessão da demonstração.</p></div>
+            <a class="text-link" href="historico.html">Histórico completo <span aria-hidden="true">→</span></a>
+          </div>
+          <div class="recent-sales-list" id="recentSales"></div>
+        </section>
+
+        <footer class="page-footer">farma+ <span aria-hidden="true">·</span> Ponto de venda</footer>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

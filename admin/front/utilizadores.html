@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f7f5">
+  <meta name="description" content="Gestão dos utilizadores da farma+.">
+  <title>Utilizadores | farma+</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="utilizadores.css">
+  <script src="config.js" defer></script>
+  <script src="api.js" defer></script>
+  <script src="utilizadores.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Menu principal">
+      <a class="brand" href="dasboard.html" aria-label="farma+, painel de controlo">
+        <span class="brand-mark" aria-hidden="true">+</span>
+        <span class="brand-name">farma<span>+</span><small>gestão inteligente</small></span>
+      </a>
+
+      <p class="nav-caption">ESPAÇO DE TRABALHO</p>
+      <nav class="navigation" aria-label="Navegação principal">
+        <a class="nav-link" href="dasboard.html"><span aria-hidden="true">▦</span>Visão geral</a>
+        <a class="nav-link" href="stock_lotes.html"><span aria-hidden="true">▤</span>Stock e lotes</a>
+        <a class="nav-link" href="fornecedores.html"><span aria-hidden="true">♧</span>Fornecedores</a>
+        <a class="nav-link active" href="utilizadores.html" aria-current="page"><span aria-hidden="true">♙</span>Utilizadores</a>
+        <a class="nav-link" href="venda.html"><span aria-hidden="true">＋</span>Nova venda</a>
+        <a class="nav-link" href="historico.html"><span aria-hidden="true">↻</span>Histórico de vendas</a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="help-card">
+          <span class="help-mark" aria-hidden="true">?</span>
+          <span><strong>Precisa de ajuda?</strong><small>Consulte a equipa de suporte</small></span>
+        </div>
+        <a class="logout-link" href="login.html"><span aria-hidden="true">↪</span>Terminar sessão</a>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">FARMÁCIA CENTRAL</p>
+          <h1>Gestão de utilizadores</h1>
+        </div>
+        <div class="admin-profile">
+          <span class="avatar" aria-hidden="true">AD</span>
+          <span><strong>Administrador</strong><small>Gestão da farmácia</small></span>
+        </div>
+      </header>
+
+      <div class="page-content">
+        <section class="welcome-row" aria-labelledby="page-title">
+          <div>
+            <p class="eyebrow">EQUIPA</p>
+            <h2 id="page-title">Utilizadores</h2>
+            <p class="intro">Consulte e mantenha os acessos e perfis da equipa atualizados.</p>
+          </div>
+          <button class="primary-button" id="addUserButton" type="button"><span aria-hidden="true">＋</span> Novo utilizador</button>
+        </section>
+
+        <p class="demo-notice"><span aria-hidden="true">i</span> Os utilizadores são geridos na base de dados.</p>
+
+        <section class="user-panel" aria-label="Lista de utilizadores">
+          <div class="table-toolbar">
+            <div>
+              <h3>Todos os utilizadores</h3>
+              <p id="userCount" aria-live="polite"></p>
+            </div>
+            <label class="search-field">
+              <span aria-hidden="true">⌕</span>
+              <input id="userSearch" type="search" placeholder="Pesquisar por nome ou email" aria-label="Pesquisar utilizadores">
+            </label>
+          </div>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Utilizador</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Perfil</th>
+                  <th scope="col">Data de criação</th>
+                  <th scope="col">Estado</th>
+                  <th scope="col"><span class="sr-only">Ações</span></th>
+                </tr>
+              </thead>
+              <tbody id="usersTableBody"></tbody>
+            </table>
+            <div class="empty-state" id="emptyState" hidden>
+              <span class="empty-icon" aria-hidden="true">♙</span>
+              <h3 id="emptyTitle">Ainda não existem utilizadores</h3>
+              <p id="emptyMessage">Adicione um utilizador para começar a gerir a equipa.</p>
+            </div>
+          </div>
+          <div class="table-footer"><span>Gestão da equipa</span><span id="visibleCount"></span></div>
+        </section>
+
+        <footer class="page-footer">farma+ <span aria-hidden="true">·</span> Painel administrativo</footer>
+      </div>
+    </main>
+  </div>
+
+  <dialog class="user-dialog" id="userDialog" aria-labelledby="dialogTitle">
+    <form id="userForm">
+      <div class="dialog-heading">
+        <div>
+          <p class="eyebrow">EQUIPA</p>
+          <h2 id="dialogTitle">Novo utilizador</h2>
+          <p>Preencha os dados do utilizador.</p>
+        </div>
+        <button class="close-button" id="closeDialogButton" type="button" aria-label="Fechar">×</button>
+      </div>
+
+      <label class="form-field" for="userName">Nome completo
+        <input id="userName" name="nome" type="text" maxlength="100" autocomplete="name" required>
+      </label>
+      <label class="form-field" for="userEmail">Email
+        <input id="userEmail" name="email" type="email" maxlength="100" autocomplete="email" required>
+      </label>
+      <label class="form-field" for="userPassword">Palavra-passe <span class="password-note" id="passwordNote">Mínimo de 12 caracteres.</span>
+        <input id="userPassword" name="senha" type="password" minlength="12" maxlength="200" autocomplete="new-password">
+      </label>
+      <div class="form-row">
+        <label class="form-field" for="userRole">Perfil
+          <select id="userRole" name="perfil" required>
+            <option value="Farmacêutico">Farmacêutico</option>
+            <option value="Administrador">Administrador</option>
+          </select>
+        </label>
+        <label class="form-field" for="userStatus">Estado
+          <select id="userStatus" name="status" required>
+            <option value="ATIVO">Ativo</option>
+            <option value="INATIVO">Inativo</option>
+          </select>
+        </label>
+      </div>
+      <p class="form-error" id="formError" role="alert" hidden></p>
+      <div class="dialog-actions">
+        <button class="secondary-button" id="cancelDialogButton" type="button">Cancelar</button>
+        <button class="primary-button" id="saveUserButton" type="submit">Guardar utilizador</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

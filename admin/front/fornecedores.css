@@ -1,0 +1,25 @@
+.supplier-identity {
+  display: flex;
+  min-width: 190px;
+  align-items: center;
+  gap: 9px;
+}
+
+.supplier-identity strong { font-size: 12px; font-weight: 700; }
+
+.supplier-avatar {
+  display: grid;
+  width: 31px;
+  height: 31px;
+  flex: 0 0 31px;
+  place-items: center;
+  color: #176f59;
+  background: #dff0e8;
+  border-radius: 9px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+@media (max-width: 700px) {
+  .supplier-identity { min-width: 180px; }
+}

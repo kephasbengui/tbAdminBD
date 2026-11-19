@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f7f5">
+  <meta name="description" content="Painel administrativo da farma+.">
+  <title>Painel de controlo | farma+</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <script src="config.js" defer></script>
+  <script src="api.js" defer></script>
+  <script src="dashboard.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Menu principal">
+      <a class="brand" href="dasboard.html" aria-label="farma+, painel de controlo">
+        <span class="brand-mark" aria-hidden="true">+</span>
+        <span class="brand-name">farma<span>+</span><small>gestão inteligente</small></span>
+      </a>
+
+      <p class="nav-caption">ESPAÇO DE TRABALHO</p>
+      <nav class="navigation" aria-label="Navegação principal">
+        <a class="nav-link active" href="dasboard.html" aria-current="page"><span aria-hidden="true">▦</span>Visão geral</a>
+        <a class="nav-link" href="stock_lotes.html"><span aria-hidden="true">▤</span>Stock e lotes</a>
+        <a class="nav-link" href="fornecedores.html"><span aria-hidden="true">♧</span>Fornecedores</a>
+        <a class="nav-link" href="utilizadores.html"><span aria-hidden="true">♙</span>Utilizadores</a>
+        <a class="nav-link" href="venda.html"><span aria-hidden="true">＋</span>Nova venda</a>
+        <a class="nav-link" href="historico.html"><span aria-hidden="true">↻</span>Histórico de vendas</a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="help-card">
+          <span class="help-mark" aria-hidden="true">?</span>
+          <span><strong>Precisa de ajuda?</strong><small>Consulte a equipa de suporte</small></span>
+        </div>
+        <a class="logout-link" href="login.html"><span aria-hidden="true">↪</span>Terminar sessão</a>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">FARMÁCIA CENTRAL</p>
+          <h1>Painel de controlo</h1>
+        </div>
+        <div class="admin-profile">
+          <span class="avatar" aria-hidden="true">AD</span>
+          <span><strong>Administrador</strong><small>Gestão da farmácia</small></span>
+        </div>
+      </header>
+
+      <div class="page-content">
+        <section class="welcome-row" aria-labelledby="welcome-title">
+          <div>
+            <p class="eyebrow">VISÃO GERAL</p>
+            <h2 id="welcome-title">Bem-vindo de volta</h2>
+            <p class="intro">Acompanhe os principais indicadores e a atividade da farmácia.</p>
+          </div>
+          <span class="date-badge"><span aria-hidden="true">◷</span> Resumo diário</span>
+        </section>
+
+        <section class="metrics" aria-label="Indicadores do dia">
+          <article class="metric-card">
+            <div class="metric-heading"><span>Vendas de hoje</span><span class="metric-icon green" aria-hidden="true">€</span></div>
+            <p class="metric-value" id="todayRevenue">—</p>
+            <p class="metric-note">Valor total registado hoje</p>
+          </article>
+          <article class="metric-card">
+            <div class="metric-heading"><span>Vendas realizadas</span><span class="metric-icon blue" aria-hidden="true">↗</span></div>
+            <p class="metric-value" id="todaySales">—</p>
+            <p class="metric-note">Transações concluídas hoje</p>
+          </article>
+          <article class="metric-card">
+            <div class="metric-heading"><span>Produtos em stock</span><span class="metric-icon violet" aria-hidden="true">▤</span></div>
+            <p class="metric-value" id="stockProducts">—</p>
+            <p class="metric-note">Referências disponíveis</p>
+          </article>
+          <article class="metric-card">
+            <div class="metric-heading"><span>Stock baixo</span><span class="metric-icon amber" aria-hidden="true">!</span></div>
+            <p class="metric-value" id="lowStockProducts">—</p>
+            <p class="metric-note">Produtos a necessitar de atenção</p>
+          </article>
+        </section>
+
+        <section class="content-grid" aria-label="Resumo de atividade">
+          <article class="panel activity-panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Atividade recente</h2>
+                <p>Consulte os registos mais recentes da operação.</p>
+              </div>
+              <a class="text-link" href="historico.html">Ver histórico <span aria-hidden="true">→</span></a>
+            </div>
+            <div class="empty-state" id="recentSalesEmpty">
+              <span class="empty-icon" aria-hidden="true">◷</span>
+              <h3>Sem atividade para apresentar</h3>
+              <p>As vendas registadas vão aparecer aqui.</p>
+            </div>
+            <div id="recentSales" class="dashboard-recent-sales" aria-live="polite"></div>
+          </article>
+
+          <article class="panel stock-panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Atenção ao stock</h2>
+                <p>Produtos que podem precisar de reposição.</p>
+              </div>
+              <span class="status-pill">Stock</span>
+            </div>
+            <div class="empty-state compact" id="stockAlertsEmpty">
+              <span class="empty-icon" aria-hidden="true">✓</span>
+              <h3>Sem alertas de stock</h3>
+              <p>Os alertas de reposição serão apresentados aqui.</p>
+            </div>
+            <div id="stockAlerts" class="dashboard-stock-alerts" aria-live="polite"></div>
+            <a class="panel-link" href="stock_lotes.html">Gerir stock <span aria-hidden="true">→</span></a>
+          </article>
+        </section>
+
+        <p class="dashboard-error" id="dashboardError" role="alert" hidden></p>
+        <footer class="page-footer">farma+ <span aria-hidden="true">·</span> Painel administrativo</footer>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
